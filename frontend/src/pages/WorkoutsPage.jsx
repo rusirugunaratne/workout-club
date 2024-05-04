@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import { createAPIEndpoint, ENDPOINTS } from "../api/api"
 import {
   Card,
@@ -24,16 +24,37 @@ const WorkoutsPage = () => {
   const [anchorEl, setAnchorEl] = useState(null)
   const [currentWorkoutId, setCurrentWorkoutId] = useState(null)
   const navigate = useNavigate()
+  const location = useLocation()
 
-  const fetchWorkouts = () => {
-    createAPIEndpoint(ENDPOINTS.workout)
-      .fetch()
-      .then((res) => setWorkouts(res.data))
-      .catch((err) => console.error("Failed to fetch workouts:", err))
+  const fetchUserWorkouts = () => {
+    const userId = localStorage.getItem("userId")
+    if (!userId) {
+      console.error("No user ID found in local storage.")
+      return // Early return if no userId is stored
+    }
+
+    createAPIEndpoint(ENDPOINTS.user)
+      .fetchById(userId)
+      .then((res) => {
+        const workoutIds = res.data.workoutIds
+        createAPIEndpoint(ENDPOINTS.workout)
+          .fetch()
+          .then((res) => {
+            const allWorkouts = res.data
+            // Filter to get only the workouts that the user has IDs for
+            const userWorkouts = allWorkouts.filter((workout) =>
+              workoutIds.includes(workout._id)
+            )
+            setWorkouts(userWorkouts)
+            console.log(userWorkouts) // Do something with the userWorkouts here
+          })
+          .catch((err) => console.error("Error fetching workouts:", err))
+      })
+      .catch((err) => console.error("Error fetching user data:", err))
   }
 
   useEffect(() => {
-    fetchWorkouts()
+    fetchUserWorkouts()
   }, [])
 
   const handleClick = (event, id) => {
@@ -56,7 +77,7 @@ const WorkoutsPage = () => {
       .delete(currentWorkoutId)
       .then((res) => {
         toast("😵 Workout Deleted")
-        fetchWorkouts()
+        fetchUserWorkouts()
       })
 
     handleClose()

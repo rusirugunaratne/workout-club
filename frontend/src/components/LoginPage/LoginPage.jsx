@@ -1,15 +1,42 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { TextField, Button, Typography, Container, Box } from "@mui/material"
+import { createAPIEndpoint, ENDPOINTS } from "../../api/api"
+import toast from "react-hot-toast"
 
 const LoginPage = () => {
   const navigate = useNavigate()
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
+  const [allUsers, setAllUsers] = useState([])
+
+  console.log("all users", allUsers)
+
+  useEffect(() => {
+    createAPIEndpoint(ENDPOINTS.user)
+      .fetch()
+      .then((res) => {
+        setAllUsers(res.data)
+        console.log("res", res.data)
+      })
+      .catch((err) => toast(err))
+  }, [])
 
   const handleLogin = () => {
     console.log("Username:", username, "Password:", password)
-    navigate("/workouts") // Navigate to the workouts page after logging in
+    // Check if username and password match any user in the allUsers array
+    const user = allUsers.find(
+      (user) => user.username === username && user.password === password
+    )
+    if (user) {
+      console.log("Login successful")
+      localStorage.setItem("userId", user._id)
+      navigate("/workouts") // Navigate to the workouts page after successful login
+    } else {
+      console.error("Login failed: Invalid username or password")
+      toast("❌ Login failed: Invalid username or password")
+      // Optionally, display a message to the user or handle the error
+    }
   }
 
   const handleRegister = () => {

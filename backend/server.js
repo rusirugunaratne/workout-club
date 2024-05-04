@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const workoutController = require("./controller/WorkoutController");
+const userController = require("./controller/UserController");
 
 
 const cors = require('cors');
@@ -28,6 +29,7 @@ const port = process.env.PORT
 app.use(express.json());
 app.use(cors());
 app.use('/api', workoutController)
+app.use('/api', userController)
 
 
 app.listen(port, () => {

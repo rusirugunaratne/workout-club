@@ -2,7 +2,7 @@ import { Stack, Typography } from "@mui/material"
 import { GiFastArrow } from "react-icons/gi"
 import { TiLockClosed } from "react-icons/ti"
 import { colors } from "../../utils/colors"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { CgGym } from "react-icons/cg"
 
 const Navbar = () => {
@@ -10,6 +10,17 @@ const Navbar = () => {
     { title: "Home", link: "/workouts" },
     { title: "Add Workout", link: "/addWorkout" },
   ]
+
+  const navigate = useNavigate()
+
+  const handleAuthClick = () => {
+    if (localStorage.getItem("userId")) {
+      localStorage.removeItem("userId") // Clear user ID from local storage
+      navigate("/") // Optionally navigate to home or login page
+    } else {
+      navigate("/login") // Direct user to login page
+    }
+  }
 
   return (
     <>
@@ -55,9 +66,13 @@ const Navbar = () => {
             alignItems='center'
             spacing={1}
           >
-            <Link style={{ textDecoration: "none" }} to={"/admin/employers"}>
+            <Link
+              style={{ textDecoration: "none" }}
+              to='/'
+              onClick={handleAuthClick}
+            >
               <Typography variant='body1' fontWeight='medium' color='initial'>
-                Login
+                {localStorage.getItem("userId") ? "Logout" : "Login"}
               </Typography>
             </Link>
             <TiLockClosed />

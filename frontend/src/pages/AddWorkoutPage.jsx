@@ -22,6 +22,22 @@ const AddWorkoutPage = () => {
   const [exercises, setExercises] = useState([])
   const [workoutId, setWorkoutId] = useState("")
 
+  const saveToUser = (workoutId) => {
+    const userId = localStorage.getItem("userId")
+    console.log("user id", userId)
+    createAPIEndpoint(ENDPOINTS.user)
+      .fetchById(userId)
+      .then((res) => {
+        createAPIEndpoint(ENDPOINTS.user).put(userId, {
+          ...res.data,
+          workoutIds: [...res.data.workoutIds, workoutId],
+        })
+        toast("💪🏻 Workout Added")
+        navigate("/workouts")
+        setTimeout(() => window.location.reload(), 100)
+      })
+  }
+
   const handleAddExercise = () => {
     setExercises([...exercises, { name: "", imageUrl: "", sets: [] }])
   }
@@ -61,8 +77,7 @@ const AddWorkoutPage = () => {
     createAPIEndpoint(ENDPOINTS.workout)
       .post(workoutData)
       .then((res) => {
-        toast("💪🏻 Workout Added")
-        navigate("/workouts")
+        saveToUser(res.data._id)
       })
       .catch((err) => toast(err.message))
     console.log(workoutData)

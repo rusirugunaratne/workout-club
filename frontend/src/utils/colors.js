@@ -1,4 +1,4 @@
 export const colors = {
-    primary: '#00008B',
-    cardBackground: 'lightblue',
+    primary: '#1261A0', // Blue Sapphire
+    cardBackground: '#0fa3b1', // Polar
 }

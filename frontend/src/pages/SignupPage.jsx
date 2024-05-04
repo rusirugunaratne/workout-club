@@ -1,6 +1,8 @@
 import React, { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { TextField, Button, Typography, Container, Box } from "@mui/material"
+import { createAPIEndpoint, ENDPOINTS } from "../api/api"
+import toast from "react-hot-toast"
 
 const SignupPage = () => {
   const navigate = useNavigate()
@@ -9,6 +11,7 @@ const SignupPage = () => {
     email: "",
     password: "",
     confirmPassword: "",
+    workoutIds: [],
   })
 
   const handleChange = (e) => {
@@ -32,7 +35,14 @@ const SignupPage = () => {
       "Confirm Password:",
       confirmPassword
     )
-    navigate("/workouts") // Navigate to the workouts page after signing up
+
+    createAPIEndpoint(ENDPOINTS.user)
+      .post(formData)
+      .then((res) => {
+        localStorage.setItem("userId", res.data._id)
+        navigate("/workouts")
+      })
+      .catch((err) => toast(err.message))
   }
 
   const handleSignIn = () => {
