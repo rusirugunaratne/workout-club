@@ -9,32 +9,23 @@ export const themeOptions = {
         fontWeightMedium: 500,
     },
     palette: {
-        type: 'light',
+        mode: "dark",
         primary: {
-            main: colors.primary,
+            main: "#46b989", // Used elsewhere
+        },
+        success: {
+            main: "#11C6A9", // custom button color (seafoam green)
+            contrastText: "#ffffff", // custom button text (white)
+        },
+        error: {
+            main: "#C6112E", // custom button color (red)
         },
         secondary: {
-            main: '#f50057',
+            main: "#46b989",
         },
-        background: {
-            paper: 'white',
-        },
-    },
-    shape: {
-        borderRadius: 5,
-    },
-    overrides: {
-        MuiButton: {
-            contained: {
-                boxShadow: 'none', // Remove the box shadow for contained buttons
-            },
-            outlined: {
-                boxShadow: 'none', // Remove the box shadow for outlined buttons
-            },
-            text: {
-                paddingX: 8,
-                paddingY: 3,
-            }
+        warning: {
+            main: "#00526b", // custom button color (seafoam green)
+            contrastText: "#ffffff", // custom button text (white)
         },
     },
-};
+}

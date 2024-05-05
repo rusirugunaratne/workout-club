@@ -7,7 +7,7 @@ import { CgGym } from "react-icons/cg"
 
 const Navbar = () => {
   const navBarItems = [
-    { title: "Home", link: "/workouts" },
+    { title: "Workouts", link: "/workouts" },
     { title: "Add Workout", link: "/addWorkout" },
   ]
 
@@ -39,13 +39,29 @@ const Navbar = () => {
           spacing={2}
         >
           <CgGym size={60} />
-          <Typography variant='h4' color='initial'>
-            Workout Club
-          </Typography>
+          <Typography variant='h4'>Workout Club</Typography>
         </Stack>
 
         <Stack direction='row' spacing={4}>
-          {navBarItems.map((item, index) => (
+          {localStorage.getItem("userId") ? (
+            <>
+              {navBarItems.map((item, index) => (
+                <Link style={{ textDecoration: "none" }} to={item.link}>
+                  <Typography
+                    key={index}
+                    variant='body1'
+                    fontWeight='medium'
+                    color='white'
+                  >
+                    {item.title}
+                  </Typography>
+                </Link>
+              ))}
+            </>
+          ) : (
+            <></>
+          )}
+          {/* {navBarItems.map((item, index) => (
             <Link style={{ textDecoration: "none" }} to={item.link}>
               <Typography
                 key={index}
@@ -56,7 +72,7 @@ const Navbar = () => {
                 {item.title}
               </Typography>
             </Link>
-          ))}
+          ))} */}
         </Stack>
 
         <Stack direction='row' spacing={4}>
@@ -71,7 +87,7 @@ const Navbar = () => {
               to='/'
               onClick={handleAuthClick}
             >
-              <Typography variant='body1' fontWeight='medium' color='initial'>
+              <Typography variant='body1' fontWeight='medium' color='white'>
                 {localStorage.getItem("userId") ? "Logout" : "Login"}
               </Typography>
             </Link>

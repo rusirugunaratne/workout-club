@@ -41,6 +41,8 @@ const WorkoutsPage = () => {
           .fetch()
           .then((res) => {
             const allWorkouts = res.data
+            console.log("all workouts", allWorkouts)
+            console.log("workoutIds", workoutIds)
             // Filter to get only the workouts that the user has IDs for
             const userWorkouts = allWorkouts.filter((workout) =>
               workoutIds.includes(workout._id)
@@ -92,79 +94,84 @@ const WorkoutsPage = () => {
   }
 
   return (
-    <Grid container spacing={2} sx={{ padding: 2 }}>
-      {workouts.map((workout) => (
-        <Grid item xs={12} sm={6} md={4} key={workout._id}>
+    <Stack padding={4} direction='column'>
+      <Typography variant='h4' gutterBottom>
+        My Workouts
+      </Typography>
+      <Grid container spacing={2}>
+        {workouts.map((workout) => (
+          <Grid item xs={12} sm={6} md={4} key={workout._id}>
+            <Card
+              sx={{
+                position: "relative",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100%",
+              }}
+            >
+              <CardActionArea onClick={() => handleCardClick(workout._id)}>
+                <CardContent sx={{ display: "flex", alignItems: "center" }}>
+                  <Avatar sx={{ marginRight: 2, bgcolor: "secondary.main" }}>
+                    {workout.workoutName[0].toUpperCase()}
+                  </Avatar>
+                  <Typography variant='h6'>{workout.workoutName}</Typography>
+                </CardContent>
+              </CardActionArea>
+              <IconButton
+                aria-label='settings'
+                onClick={(e) => handleClick(e, workout._id)}
+                sx={{ position: "absolute", right: 0, top: 0 }}
+              >
+                <MoreVertIcon />
+              </IconButton>
+              <Menu
+                id='simple-menu'
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+              >
+                <MenuItem onClick={handleShare}>Share Workout</MenuItem>
+                <MenuItem onClick={handleDelete}>Delete Workout</MenuItem>
+              </Menu>
+            </Card>
+          </Grid>
+        ))}
+        <Grid item xs={12} sm={6} md={4}>
           <Card
             sx={{
-              position: "relative",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
               height: "100%",
             }}
           >
-            <CardActionArea onClick={() => handleCardClick(workout._id)}>
-              <CardContent sx={{ display: "flex", alignItems: "center" }}>
-                <Avatar sx={{ marginRight: 2, bgcolor: "secondary.main" }}>
-                  {workout.workoutName[0].toUpperCase()}
-                </Avatar>
-                <Typography variant='h6'>{workout.workoutName}</Typography>
-              </CardContent>
+            <CardActionArea
+              onClick={handleAddWorkout}
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                height: "100%",
+                padding: 2,
+                bgcolor: colors.cardBackground,
+              }}
+            >
+              <Stack
+                direction='row'
+                justifyContent='center'
+                alignItems='center'
+                spacing={2}
+              >
+                <AddCircleOutlineIcon />
+                <Typography variant='h6'>Add Workout</Typography>
+              </Stack>
             </CardActionArea>
-            <IconButton
-              aria-label='settings'
-              onClick={(e) => handleClick(e, workout._id)}
-              sx={{ position: "absolute", right: 0, top: 0 }}
-            >
-              <MoreVertIcon />
-            </IconButton>
-            <Menu
-              id='simple-menu'
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-            >
-              <MenuItem onClick={handleShare}>Share Workout</MenuItem>
-              <MenuItem onClick={handleDelete}>Delete Workout</MenuItem>
-            </Menu>
           </Card>
         </Grid>
-      ))}
-      <Grid item xs={12} sm={6} md={4}>
-        <Card
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "100%",
-          }}
-        >
-          <CardActionArea
-            onClick={handleAddWorkout}
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              height: "100%",
-              padding: 2,
-              bgcolor: colors.cardBackground,
-            }}
-          >
-            <Stack
-              direction='row'
-              justifyContent='center'
-              alignItems='center'
-              spacing={2}
-            >
-              <AddCircleOutlineIcon />
-              <Typography variant='h6'>Add Workout</Typography>
-            </Stack>
-          </CardActionArea>
-        </Card>
       </Grid>
-    </Grid>
+    </Stack>
   )
 }
 
